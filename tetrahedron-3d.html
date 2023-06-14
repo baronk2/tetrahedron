@@ -1,0 +1,2723 @@
+<!--
+Browser Console Error:
+
+gl-matrix-min.js:28 Uncaught TypeError: Cannot set properties of undefined (setting '0')
+    at Object.P (gl-matrix-min.js:28:13905)
+    at updateProjectionMatrix (tetrahedron-3d.html:107:31)
+    at setCanvasSize (tetrahedron-3d.html:35:17)
+    at HTMLDocument.<anonymous> (tetrahedron-3d.html:40:13)
+ -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Triangle</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+            const mat4 = glMatrix.mat4;
+
+            let projectionMatrix;
+
+            function updateProjectionMatrix() {
+                const fieldOfView = 45 * Math.PI / 180;
+                const aspectRatio = canvas.width / canvas.height;
+                const near = 0.1;
+                const far = 100.0;
+                projectionMatrix = mat4.create();
+                mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+            }
+
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                updateProjectionMatrix();
+                // Additional code for handling aspect ratio and resizing here
+            }
+
+            // Call setCanvasSize initially
+            setCanvasSize();
+
+            // Call setCanvasSize whenever the window is resized
+            window.addEventListener('resize', setCanvasSize);
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec2 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                precision mediump float;
+
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the triangle vertex data
+            const vertices = [
+                -0.5, -0.5, // Bottom-left
+                0.5, -0.5,  // Bottom-right
+                0.0, 0.5    // Top
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // Set up the projection and model view transformation matrices
+            // const projectionMatrix = glMatrix.mat4.create();
+            const modelViewMatrix = glMatrix.mat4.create();
+            const modelViewProjectionMatrix = glMatrix.mat4.create();
+
+            // Update the projection matrix with the current canvas size
+            function updateProjectionMatrix() {
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                glMatrix.mat4.ortho(projectionMatrix, 0, canvasWidth, 0, canvasHeight, -1, 1);
+            }
+
+            // Update the model view projection matrix
+            function updateModelViewProjectionMatrix() {
+                glMatrix.mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+            }
+
+            // Render the scene
+            function render() {
+                // Set the viewport to match the canvas size
+                gl.viewport(0, 0, canvas.width, canvas.height);
+
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the model view projection matrix
+                updateModelViewProjectionMatrix();
+
+                // Set the model view projection matrix uniform in the shader
+                const modelViewProjectionUniformLocation = gl.getUniformLocation(program, 'modelViewProjection');
+                gl.uniformMatrix4fv(modelViewProjectionUniformLocation, false, modelViewProjectionMatrix);
+
+                // Draw the triangle
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            }
+
+            // Render the initial scene
+            render();
+
+            // ... Rest of your WebGL code ...
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+<!-- 
+Browser Console Error:
+
+gl-matrix-min.js:28 Uncaught TypeError: Cannot set properties of undefined (setting '0')
+    at Object.P (gl-matrix-min.js:28:13905)
+    at updateProjectionMatrix (tetrahedron-3d.html:107:31)
+    at setCanvasSize (tetrahedron-3d.html:35:17)
+    at HTMLDocument.<anonymous> (tetrahedron-3d.html:40:13)
+P	@	gl-matrix-min.js:28
+updateProjectionMatrix	@	tetrahedron-3d.html:107
+setCanvasSize	@	tetrahedron-3d.html:35
+(anonymous)	@	tetrahedron-3d.html:40
+ -->
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Triangle</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+            const mat4 = glMatrix.mat4;
+
+            let projectionMatrix;
+
+            function updateProjectionMatrix() {
+                const fieldOfView = 45 * Math.PI / 180;
+                const aspectRatio = canvas.width / canvas.height;
+                const near = 0.1;
+                const far = 100.0;
+                projectionMatrix = mat4.create();
+                mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+            }
+
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                updateProjectionMatrix();
+                // Additional code for handling aspect ratio and resizing here
+            }
+
+            // Call setCanvasSize initially
+            setCanvasSize();
+
+            // Call setCanvasSize whenever the window is resized
+            window.addEventListener('resize', setCanvasSize);
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec2 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                precision mediump float;
+
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the triangle vertex data
+            const vertices = [
+                -0.5, -0.5, // Bottom-left
+                0.5, -0.5,  // Bottom-right
+                0.0, 0.5    // Top
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // Set up the projection and model view transformation matrices
+            // const projectionMatrix = glMatrix.mat4.create();
+            const modelViewMatrix = glMatrix.mat4.create();
+            const modelViewProjectionMatrix = glMatrix.mat4.create();
+
+            // Update the projection matrix with the current canvas size
+            function updateProjectionMatrix() {
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                glMatrix.mat4.ortho(projectionMatrix, 0, canvasWidth, 0, canvasHeight, -1, 1);
+            }
+
+            // Update the model view projection matrix
+            function updateModelViewProjectionMatrix() {
+                glMatrix.mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+            }
+
+            // Render the scene
+            function render() {
+                // Set the viewport to match the canvas size
+                gl.viewport(0, 0, canvas.width, canvas.height);
+
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the model view projection matrix
+                updateModelViewProjectionMatrix();
+
+                // Set the model view projection matrix uniform in the shader
+                const modelViewProjectionUniformLocation = gl.getUniformLocation(program, 'modelViewProjection');
+                gl.uniformMatrix4fv(modelViewProjectionUniformLocation, false, modelViewProjectionMatrix);
+
+                // Draw the triangle
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            }
+
+            // Render the initial scene
+            render();
+
+            // ... Rest of your WebGL code ...
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+<!-- 
+Browser Console Error:
+
+tetrahedron-3d.html:97 Uncaught ReferenceError: Cannot access 'projectionMatrix' before initialization
+    at updateProjectionMatrix (tetrahedron-3d.html:97:37)
+    at setCanvasSize (tetrahedron-3d.html:27:17)
+    at tetrahedron-3d.html:30:13
+ -->
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Triangle</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Set the canvas size to match the browser window
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                // Update the projection matrix
+                updateProjectionMatrix();
+            }
+
+            setCanvasSize(); // Set initial size
+
+            // Handle window resize event
+            window.addEventListener('resize', setCanvasSize);
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec2 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                precision mediump float;
+
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the triangle vertex data
+            const vertices = [
+                -0.5, -0.5, // Bottom-left
+                0.5, -0.5,  // Bottom-right
+                0.0, 0.5    // Top
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // Set up the projection and model view transformation matrices
+            const projectionMatrix = glMatrix.mat4.create();
+            const modelViewMatrix = glMatrix.mat4.create();
+            const modelViewProjectionMatrix = glMatrix.mat4.create();
+
+            // Update the projection matrix with the current canvas size
+            function updateProjectionMatrix() {
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                glMatrix.mat4.ortho(projectionMatrix, 0, canvasWidth, 0, canvasHeight, -1, 1);
+            }
+
+            // Update the model view projection matrix
+            function updateModelViewProjectionMatrix() {
+                glMatrix.mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+            }
+
+            // Render the scene
+            function render() {
+                // Set the viewport to match the canvas size
+                gl.viewport(0, 0, canvas.width, canvas.height);
+
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the model view projection matrix
+                updateModelViewProjectionMatrix();
+
+                // Set the model view projection matrix uniform in the shader
+                const modelViewProjectionUniformLocation = gl.getUniformLocation(program, 'modelViewProjection');
+                gl.uniformMatrix4fv(modelViewProjectionUniformLocation, false, modelViewProjectionMatrix);
+
+                // Draw the triangle
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            }
+
+            // Render the initial scene
+            render();
+
+            // ... Rest of your WebGL code ...
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+<!-- 
+Browser Console Error:
+
+tetrahedron-3d.html:100 Uncaught ReferenceError: Cannot access 'mat4' before initialization
+    at updateProjectionMatrix (tetrahedron-3d.html:100:17)
+    at setCanvasSize (tetrahedron-3d.html:27:17)
+    at tetrahedron-3d.html:30:13
+ -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Triangle</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Set the canvas size to match the browser window
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+
+                // Update the projection matrix
+                updateProjectionMatrix();
+            }
+
+            setCanvasSize(); // Set initial size
+
+            // Handle window resize event
+            window.addEventListener('resize', setCanvasSize);
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec2 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                precision mediump float;
+
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the triangle vertex data
+            const vertices = [
+                -0.5, -0.5, // Bottom-left
+                0.5, -0.5,  // Bottom-right
+                0.0, 0.5    // Top
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // Set up the projection and model view transformation matrices
+            const projectionMatrix = mat4.create();
+            const modelViewMatrix = mat4.create();
+            const modelViewProjectionMatrix = mat4.create();
+
+            // Update the projection matrix with the current canvas size
+            function updateProjectionMatrix() {
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+                mat4.ortho(projectionMatrix, 0, canvasWidth, 0, canvasHeight, -1, 1);
+            }
+
+            // Update the model view projection matrix
+            function updateModelViewProjectionMatrix() {
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+            }
+
+            // Render the scene
+            function render() {
+                // Set the viewport to match the canvas size
+                gl.viewport(0, 0, canvas.width, canvas.height);
+
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the model view projection matrix
+                updateModelViewProjectionMatrix();
+
+                // Set the model view projection matrix uniform in the shader
+                const modelViewProjectionUniformLocation = gl.getUniformLocation(program, 'modelViewProjection');
+                gl.uniformMatrix4fv(modelViewProjectionUniformLocation, false, modelViewProjectionMatrix);
+
+                // Draw the triangle
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            }
+
+            // Render the initial scene
+            render();
+
+            // ... Rest of your WebGL code ...
+        });
+    </script>
+</body>
+</html> -->
+
+
+<!-- Goal: Get triangle to remain same size as original size at page load regardless of browswer window size -->
+<!-- Triangle still getting squished/expanded -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Triangle</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Set the canvas size to match the browser window
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            setCanvasSize(); // Set initial size
+
+            // Handle window resize event
+            window.addEventListener('resize', setCanvasSize);
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec2 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                precision mediump float;
+
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the triangle vertex data
+            const vertices = [
+                -0.5, -0.5, // Bottom-left
+                0.5, -0.5,  // Bottom-right
+                0.0, 0.5    // Top
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and model view transformation
+            const projectionMatrix = mat4.create();
+            const modelViewMatrix = mat4.create();
+
+            // Set the initial size of the triangle (adjust this to your desired size)
+            const initialTriangleSize = 200.0;
+
+            // Update the model view matrix with the scaling factor
+            function updateModelViewMatrix() {
+                // Get the current canvas size
+                const canvasWidth = canvas.width;
+                const canvasHeight = canvas.height;
+
+                // Calculate the scaling factor based on the original canvas size
+                const scaleFactor = initialTriangleSize / Math.min(canvasWidth, canvasHeight);
+
+                // Reset the model view matrix
+                mat4.identity(modelViewMatrix);
+
+                // Apply the scaling factor
+                mat4.scale(modelViewMatrix, modelViewMatrix, [scaleFactor, scaleFactor, 1.0]);
+            }
+
+            // Render the scene
+            function render() {
+                // Set the viewport to match the canvas size
+                gl.viewport(0, 0, canvas.width, canvas.height);
+
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the model view matrix
+                updateModelViewMatrix();
+
+                // Get the model view projection matrix
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Set the model view projection matrix uniform in the shader
+                const modelViewProjectionUniformLocation = gl.getUniformLocation(program, 'modelViewProjection');
+                gl.uniformMatrix4fv(modelViewProjectionUniformLocation, false, modelViewProjectionMatrix);
+
+                // Draw the triangle
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+            }
+
+            // Render the initial scene
+            render();
+
+            // ... Rest of your WebGL code ...
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+<!-- Back to one triangle to debug -->
+<!-- Sets canvas size to browser window inner dimensions -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Triangle</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Set the canvas size
+            // canvas.width = window.innerWidth;
+            // canvas.height = window.innerHeight;
+
+            // Set the canvas size to match the browser window
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            setCanvasSize(); // Set initial size
+
+            // Handle window resize event (responsively)
+            window.addEventListener('resize', setCanvasSize);
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                void main() {
+                    gl_Position = vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the triangle vertex data
+            const vertices = [
+                0.0, 0.5, 0.0,   // Top
+                -0.5, -0.5, 0.0, // Left
+                0.5, -0.5, 0.0   // Right
+            ];
+
+            // Create a buffer and bind the vertex data to it
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Clear the canvas
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Draw the triangle
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+<!-- Back to unanimated to debug -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+            const vec3 = glMatrix.vec3;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+
+            // Create a buffer and bind the vertex data to it
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Clear the canvas
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Draw the tetrahedron
+            gl.drawArrays(gl.TRIANGLES, 0, 12);
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+<!-- Black Screen of Death!!! -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+            const vec3 = glMatrix.vec3;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+
+            // Create a buffer and bind the vertex data to it
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = 0.015;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                // rotation += 0.01;
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Sort the vertices based on distance from the camera
+                const sortedVertices = vertices.slice(); // Create a copy of the vertices array
+                sortedVertices.sort((a, b) => {
+                    const vertexA = vec3.fromValues(a[0], a[1], a[2]);
+                    const vertexB = vec3.fromValues(b[0], b[1], b[2]);
+                    vec3.transformMat4(vertexA, vertexA, modelViewMatrix);
+                    vec3.transformMat4(vertexB, vertexB, modelViewMatrix);
+                    return vec3.squaredDistance(vertexB, [0, 0, 0]) - vec3.squaredDistance(vertexA, [0, 0, 0]);
+                });
+
+                // Disable face culling
+                gl.disable(gl.CULL_FACE);
+
+                // Draw the sorted vertices
+                for (let i = 0; i < sortedVertices.length; i += 3) {
+                    const faceVertices = sortedVertices.slice(i, i + 3);
+                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(faceVertices.flat()), gl.STATIC_DRAW);
+                    gl.drawArrays(gl.TRIANGLES, 0, 3);
+                }
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+<!-- Black Screen of Death!!! -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+            const vec3 = glMatrix.vec3;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = 0;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                rotation += 0.01;
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Sort the vertices based on distance from the camera
+                const sortedVertices = vertices.slice(); // Create a copy of the vertices array
+                sortedVertices.sort((a, b) => {
+                    const vertexA = vec3.fromValues(a[0], a[1], a[2]);
+                    const vertexB = vec3.fromValues(b[0], b[1], b[2]);
+                    vec3.transformMat4(vertexA, vertexA, modelViewMatrix);
+                    vec3.transformMat4(vertexB, vertexB, modelViewMatrix);
+                    return vec3.squaredDistance(vertexB, [0, 0, 0]) - vec3.squaredDistance(vertexA, [0, 0, 0]);
+                });
+
+                // Draw the sorted vertices
+                for (let i = 0; i < sortedVertices.length; i += 3) {
+                    const faceVertices = sortedVertices.slice(i, i + 3);
+                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(faceVertices.flat()), gl.STATIC_DRAW);
+                    gl.drawArrays(gl.TRIANGLES, 0, 3);
+                }
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+<!-- 
+Browser Console Errors:
+
+tetrahedron-3d.html:98 Uncaught TypeError: Cannot read properties of undefined (reading 'create')
+    at HTMLDocument.<anonymous> (tetrahedron-3d.html:98:43)
+-->
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+            const vec3 = glMatrix.vec3;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = 0.015;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                // rotation += 0.01;
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Sort the vertices based on distance from the camera
+                const sortedVertices = vertices.slice(); // Create a copy of the vertices array
+                sortedVertices.sort((a, b) => {
+                    const vertexA = vec3.fromValues(a[0], a[1], a[2]);
+                    const vertexB = vec3.fromValues(b[0], b[1], b[2]);
+                    vec3.transformMat4(vertexA, vertexA, modelViewMatrix);
+                    vec3.transformMat4(vertexB, vertexB, modelViewMatrix);
+                    return vec3.squaredDistance(vertexB, [0, 0, 0]) - vec3.squaredDistance(vertexA, [0, 0, 0]);
+                });
+
+                // Draw the sorted vertices
+                for (let i = 0; i < sortedVertices.length; i += 3) {
+                    const faceVertices = sortedVertices.slice(i, i + 3);
+                    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(faceVertices.flat()), gl.STATIC_DRAW);
+                    gl.drawArrays(gl.TRIANGLES, 0, 3);
+                }
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+<!-- 
+Browser Console Errors:
+
+tetrahedron-3d.html:116 Uncaught ReferenceError: vec3 is not defined
+    at animate (tetrahedron-3d.html:116:21)
+    at HTMLDocument.<anonymous> (tetrahedron-3d.html:159:13)
+
+
+... Separately, after including cloudfare.com gl-matrix (even though I already src it locally)...
+
+
+tetrahedron-3d.html:98 Uncaught TypeError: Cannot read properties of undefined (reading 'create')
+    at HTMLDocument.<anonymous> (tetrahedron-3d.html:98:43)
+-->
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+            
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = 0.0;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                rotation += 0.01;
+
+                // Calculate the distance from each face's center to the camera position
+                const distances = [
+                    vec3.distance([0.0, 1.0, 0.0], [0.0, 0.0, 4.0]),   // Distance for Face 1
+                    vec3.distance([0.0, 1.0, 0.0], [0.0, 0.0, 4.0]),   // Distance for Face 2
+                    vec3.distance([0.0, 1.0, 0.0], [0.0, 0.0, 4.0]),   // Distance for Face 3
+                    vec3.distance([0.0, -1.0, 0.0], [0.0, 0.0, 4.0])   // Distance for Face 4
+                ];
+
+                // Create an array of indices to represent the draw order based on distances
+                const drawOrder = [0, 1, 2, 3];  // Initial order: Face 1, Face 2, Face 3, Face 4
+
+                // Sort the draw order based on distances in descending order
+                drawOrder.sort((a, b) => distances[b] - distances[a]);
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Get the uniform location for the modelViewProjection matrix
+                const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+
+                for (let i = 0; i < drawOrder.length; i++) {
+                    const faceIndex = drawOrder[i];
+
+                    // Set the color based on the face index
+                    const color = [
+                        faceIndex === 0 ? 1.0 : 0.0,
+                        faceIndex === 1 ? 1.0 : 0.0,
+                        faceIndex === 2 ? 1.0 : 0.0,
+                        1.0
+                    ];
+                    gl.uniform4fv(gl.getUniformLocation(program, 'color'), color);
+
+                    // Draw the triangles for the face
+                    const offset = faceIndex * 9; // Each face has 3 vertices (3 coordinates per vertex)
+                    gl.drawArrays(gl.TRIANGLES, offset, 3);
+                }
+
+                // Request the next animation frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation
+            animate();
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+<!-- Still not drawing in the correct order -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+                uniform int faceIndex;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                uniform int faceIndex;
+
+                void main() {
+                    if (faceIndex == 0) {
+                        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red
+                    } else if (faceIndex == 1) {
+                        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0); // Green
+                    } else if (faceIndex == 2) {
+                        gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0); // Blue
+                    } else {
+                        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // White
+                    }
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program
+            const program = gl.createProgram();
+
+            // Attach and link the shaders
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+
+            // Check if the program linked successfully
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.error('Unable to link the shader program: ' + gl.getProgramInfoLog(program));
+                return;
+            }
+
+            // Use the shader program
+            gl.useProgram(program);
+
+            // Create the vertex buffer and bind it
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+
+            // Set the vertex buffer data
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Get the uniform locations
+            const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+            const faceIndexLocation = gl.getUniformLocation(program, 'faceIndex');
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = 0.015;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                // rotation += 0.015;
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                // Draw the tetrahedron faces
+                for (let faceIndex = 0; faceIndex < 3; faceIndex++) {
+                    // Set the current face index
+                    gl.uniform1i(faceIndexLocation, faceIndex);
+
+                    const modelViewProjectionMatrix = mat4.create();
+                    mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                    // Set the value of the modelViewProjection uniform
+                    gl.uniformMatrix4fv(modelViewProjectionLocation, false, modelViewProjectionMatrix);
+
+                    // Draw the triangles for the current face
+                    gl.drawArrays(gl.TRIANGLES, faceIndex * 3, 3);
+                }
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- Not linking program before retrieving attribute and uniform locations -->
+
+<!-- 
+Browser Console Errors:
+tetrahedron-3d.html:67 WebGL: INVALID_OPERATION: useProgram: program not valid
+(anonymous) @ tetrahedron-3d.html:67
+tetrahedron-3d.html:83 WebGL: INVALID_OPERATION: getAttribLocation: program not linked
+(anonymous) @ tetrahedron-3d.html:83
+170WebGL: INVALID_OPERATION: getUniformLocation: program not linked
+84WebGL: INVALID_OPERATION: drawArrays: no valid shader program in use
+tetrahedron-3d.html:136 WebGL: too many errors, no more errors will be reported to the console for this context.
+-->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                uniform int faceIndex;
+                void main() {
+                    vec4 color;
+                    if (faceIndex == 0)
+                        color = vec4(1.0, 0.0, 0.0, 1.0); // Red
+                    else if (faceIndex == 1)
+                        color = vec4(0.0, 1.0, 0.0, 1.0); // Green
+                    else if (faceIndex == 2)
+                        color = vec4(0.0, 0.0, 1.0, 1.0); // Blue
+                    else
+                        discard; // Discard white face
+
+                    gl_FragColor = color;
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Define the face order based on the initial vertex positions
+            const faceOrder = [0, 1, 2, 3];
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Calculate the distance from the viewer to each triangle
+                const distances = [];
+                for (let i = 0; i < faceOrder.length; i++) {
+                    const faceIndex = faceOrder[i];
+                    const faceVertices = vertices.slice(faceIndex * 3, faceIndex * 3 + 3);
+                    const faceCenter = [
+                        (faceVertices[0] + faceVertices[3] + faceVertices[6]) / 3,
+                        (faceVertices[1] + faceVertices[4] + faceVertices[7]) / 3,
+                        (faceVertices[2] + faceVertices[5] + faceVertices[8]) / 3
+                    ];
+                    const distance = Math.sqrt(faceCenter[0] ** 2 + faceCenter[1] ** 2 + faceCenter[2] ** 2);
+                    distances.push({ faceIndex, distance });
+                }
+
+                // Sort the faces based on distance in descending order
+                distances.sort((a, b) => b.distance - a.distance);
+
+                // Draw the tetrahedron faces in the updated order
+                for (let i = 0; i < distances.length; i++) {
+                    const faceIndex = distances[i].faceIndex;
+
+                    // Apply rotation to the model view matrix
+                    mat4.rotateY(modelViewMatrix, modelViewMatrix, 0.015);
+
+                    const modelViewProjectionMatrix = mat4.create();
+                    mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                    // Get the uniform location for the modelViewProjection matrix and faceIndex
+                    const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+                    const faceIndexLocation = gl.getUniformLocation(program, 'faceIndex');
+
+                    // Set the value of the modelViewProjection and faceIndex uniforms
+                    gl.uniformMatrix4fv(modelViewProjectionLocation, false, modelViewProjectionMatrix);
+                    gl.uniform1i(faceIndexLocation, faceIndex);
+
+                    // Draw the triangle
+                    gl.drawArrays(gl.TRIANGLES, faceIndex * 3, 3);
+                }
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+<!-- Drawing triangles in a static order based on their initial positions relative to the viewer -->
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                precision mediump float;
+
+                uniform int faceIndex;
+                void main() {
+                    if (faceIndex == 0) {
+                        gl_FragColor = vec4(1.0, 0.0, 0.0, 0.5); // Red
+                    } else if (faceIndex == 1) {
+                        gl_FragColor = vec4(0.0, 1.0, 0.0, 0.5); // Green
+                    } else if (faceIndex == 2) {
+                        gl_FragColor = vec4(0.0, 0.0, 1.0, 0.5); // Blue
+                    } else if (faceIndex == 3) {
+                        gl_FragColor = vec4(1.0, 1.0, 1.0, 0.5); // White
+                    }
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = 0.015;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                // rotation += 0.01;
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Get the uniform locations
+                const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+                const faceIndexLocation = gl.getUniformLocation(program, 'faceIndex');
+
+                // Set the uniform values
+                gl.uniformMatrix4fv(modelViewProjectionLocation, false, modelViewProjectionMatrix);
+
+                // Draw each face of the tetrahedron
+
+                // Always draws red faces first, leaving it behind the other two upper faces
+                // Always draws white face last, leaving it in front of all other faces
+
+                // for (let i = 0; i < 4; i++) {
+                //     gl.uniform1i(faceIndexLocation, i);
+                //     gl.drawArrays(gl.TRIANGLES, i * 3, 3);
+                // }
+
+
+                // Draw the faces based on their distance from the viewer
+                const faceOrder = [2, 0, 1]; // Order of faces based on distance
+                for (let i = 0; i < faceOrder.length; i++) {
+                    const faceIndex = faceOrder[i];
+
+                    // Get the uniform location for the faceIndex
+                    const faceIndexLocation = gl.getUniformLocation(program, 'faceIndex');
+
+                    // Set the value of the faceIndex uniform
+                    gl.uniform1i(faceIndexLocation, faceIndex);
+
+                    // Draw the face
+                    gl.drawArrays(gl.TRIANGLES, faceIndex * 3, 3);
+                }
+
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+<!-- Animated, rotating -->
+<!-- 4 vertices in tetrahedron  -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            // const vertices = [
+            //     0.0, 1.0, 0.0,   // Top
+            //     1.0, -1.0, -1.0, // Front
+            //     -1.0, -1.0, -1.0, // Left
+            //     0.0, -1.0, 1.0   // Right
+            // ];
+
+
+            // More vertices (redundant) to get all 4 tetrahedron faces to show
+            const vertices = [
+                // Face 1 (Top, Front, Left)
+                0.0, 1.0, 0.0,    // Top
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+
+                // Face 2 (Top, Left, Right)
+                0.0, 1.0, 0.0,    // Top
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0,   // Right
+
+                // Face 3 (Top, Right, Front)
+                0.0, 1.0, 0.0,    // Top
+                0.0, -1.0, 1.0,   // Right
+                1.0, -1.0, -1.0,  // Front
+
+                // Face 4 (Front, Left, Right)
+                1.0, -1.0, -1.0,  // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0    // Right
+            ];
+            
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = .015;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                // rotation += 0.001;
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Get the uniform location for the modelViewProjection matrix
+                const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+
+                // Set the value of the modelViewProjection uniform
+                gl.uniformMatrix4fv(modelViewProjectionLocation, false, modelViewProjectionMatrix);
+
+                // Draw the tetrahedron
+                // `drawArrays()` call with 12 vertices passed in for intermediary fix of adding more redundant vertices (unnecessary)
+                gl.drawArrays(gl.TRIANGLES, 0, 12);
+
+
+                // `drawArrays()` call with 4 vertices passed in for original 4 vertices (doesn't seem to render all faces)
+                gl.drawArrays(gl.TRIANGLES, 0, 4);
+
+                // Old `drawArrays()` call with incorrect number of vertices passed in
+                // gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+<!-- Static, not animated -->
+<!-- 4 vertices in tetrahedron  -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                0.0, 1.0, 0.0,   // Top
+                1.0, -1.0, -1.0, // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0   // Right
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            const modelViewProjectionMatrix = mat4.create();
+            mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+            // Get the uniform location for the modelViewProjection matrix
+            const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+
+            // Set the value of the modelViewProjection uniform
+            gl.uniformMatrix4fv(modelViewProjectionLocation, false, modelViewProjectionMatrix);
+
+            // Set the viewport and clear the canvas
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Draw the tetrahedron
+            gl.drawArrays(gl.TRIANGLES, 0, 4);
+
+        });
+        
+
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+<!-- Animated, rotating -->
+<!-- Only 3 vertices in "tetrahedron", though...  -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            // Reference the mat4 object from the gl-matrix library
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                0.0, 1.0, 0.0,   // Top
+                1.0, -1.0, -1.0, // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0   // Right
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            // Animation variables
+            let rotation = .015;
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                gl.clearColor(0.0, 0.0, 0.0, 1.0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                // Update the rotation angle
+                // rotation += 0.001;
+
+                // Apply rotation to the model view matrix
+                mat4.rotateY(modelViewMatrix, modelViewMatrix, rotation);
+
+                const modelViewProjectionMatrix = mat4.create();
+                mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+                // Get the uniform location for the modelViewProjection matrix
+                const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+
+                // Set the value of the modelViewProjection uniform
+                gl.uniformMatrix4fv(modelViewProjectionLocation, false, modelViewProjectionMatrix);
+
+                // Draw the tetrahedron
+                gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+                // Request the next frame
+                requestAnimationFrame(animate);
+            }
+
+            // Start the animation loop
+            animate();
+
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+<!-- Static 3D Drawing, no animation -->
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>WebGL Tetrahedron</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="webgl-canvas"></canvas>
+
+    <script src="src/toji-gl-matrix-bc1bbf4/dist/gl-matrix-min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        
+            // Get the WebGL context
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            const mat4 = glMatrix.mat4;
+
+            // Vertex shader source code
+            const vertexShaderSource = `
+                attribute vec3 position;
+                uniform mat4 modelViewProjection;
+
+                void main() {
+                    gl_Position = modelViewProjection * vec4(position, 1.0);
+                }
+            `;
+
+            // Fragment shader source code
+            const fragmentShaderSource = `
+                void main() {
+                    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+                }
+            `;
+
+            // Create and compile the vertex shader
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            // Create and compile the fragment shader
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            // Create the shader program and link the shaders
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            // Define the tetrahedron vertex data
+            const vertices = [
+                0.0, 1.0, 0.0,   // Top
+                1.0, -1.0, -1.0, // Front
+                -1.0, -1.0, -1.0, // Left
+                0.0, -1.0, 1.0   // Right
+            ];
+
+            // Create a buffer to store the vertex data
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+            // Associate the vertex buffer with the position attribute in the shader
+            const positionAttributeLocation = gl.getAttribLocation(program, 'position');
+            gl.enableVertexAttribArray(positionAttributeLocation);
+            gl.vertexAttribPointer(positionAttributeLocation, 3, gl.FLOAT, false, 0, 0);
+
+            // Set up the perspective projection and camera transformation
+            const fieldOfView = 45 * Math.PI / 180; // 45 degrees in radians
+            const aspectRatio = canvas.width / canvas.height;
+            const near = 0.1;
+            const far = 100.0;
+            const projectionMatrix = mat4.create();
+            mat4.perspective(projectionMatrix, fieldOfView, aspectRatio, near, far);
+
+            const modelViewMatrix = mat4.create();
+            mat4.translate(modelViewMatrix, modelViewMatrix, [0.0, 0.0, -4.0]); // Move the camera back along the z-axis
+
+            const modelViewProjectionMatrix = mat4.create();
+            mat4.multiply(modelViewProjectionMatrix, projectionMatrix, modelViewMatrix);
+
+            // Get the uniform location for the modelViewProjection matrix
+            const modelViewProjectionLocation = gl.getUniformLocation(program, 'modelViewProjection');
+
+            // Set the value of the modelViewProjection uniform
+            gl.uniformMatrix4fv(modelViewProjectionLocation, false, modelViewProjectionMatrix);
+
+            // Set the viewport and clear the canvas
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Draw the tetrahedron
+            gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+        });
+        
+
+    </script>
+</body>
+</html> -->
